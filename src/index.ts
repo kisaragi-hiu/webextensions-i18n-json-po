@@ -55,6 +55,7 @@ const gettextParserDataEntry = z.object({
       previous: z.optional(z.string()),
     }),
   ),
+  obsolete: z.optional(z.boolean()),
 })
 const gettextParserData = z.object({
   charset: z.string(),
@@ -70,8 +71,9 @@ type Wei18n = z.infer<typeof wei18n>
 
 /**
  * Take parsed `json` and output the raw PO data.
+ * If `referenceTexts` is given, also write that to the PO file for reference.
  */
-function wei18n_to_po(json: Wei18n, locale: string) {
+function wei18n_to_po(json: Wei18n, locale: string, referenceTexts?: Wei18n[]) {
   const translations: Record<string, GettextParserDataEntry> = {}
   const res: GettextParserData = {
     charset: "utf-8",
@@ -92,8 +94,25 @@ function wei18n_to_po(json: Wei18n, locale: string) {
       msgstr: [entry.message],
     }
     if (entry.description) {
-      resultEntry.comments = {
-        translator: entry.description,
+      if (!resultEntry.comments) {
+        resultEntry.comments = {}
+      }
+      resultEntry.comments.extracted = entry.description
+    }
+    if (referenceTexts) {
+      for (const reference of referenceTexts) {
+        if (reference[key]) {
+          if (!resultEntry.comments) {
+            resultEntry.comments = {}
+          }
+          if (!resultEntry.comments.translator) {
+            resultEntry.comments.translator = reference[key].message
+          } else {
+            resultEntry.comments.translator = `${resultEntry.comments.translator}
+
+${reference[key].message}`
+          }
+        }
       }
     }
     translations[key] = resultEntry
@@ -106,7 +125,7 @@ function po_to_wei18n(poValue: GettextParserData) {
     if (msgid === "") continue
     res[msgid] = {
       message: entry.msgstr.join(""),
-      description: entry.comments?.translator,
+      description: entry.comments?.extracted,
     }
   }
   return JSON.stringify(res, null, 2) + "\n"
@@ -121,11 +140,15 @@ Usage:
       Gettext PO and write the resulting PO to output file.
     Otherwise, try to convert it from PO to JSON.
 
+  When converting from JSON to PO, positional arguments are all used to specify
+  reference files, like for source text.
+
 Options:
   --help: show help (this message)`
 
 async function main() {
   const parsedArgs = parseArgs({
+    allowPositionals: true,
     options: {
       locale: { type: "string", short: "l" },
       input: { type: "string", short: "i" },
@@ -146,7 +169,17 @@ async function main() {
     const wei18nValue = wei18n.parse(
       JSON.parse(readFileSync(input, { encoding: "utf-8" })),
     )
-    writeFileSync(output, wei18n_to_po(wei18nValue, locale))
+    const references = parsedArgs.positionals
+    writeFileSync(
+      output,
+      wei18n_to_po(
+        wei18nValue,
+        locale,
+        references.map((file) =>
+          wei18n.parse(JSON.parse(readFileSync(file, { encoding: "utf-8" }))),
+        ),
+      ),
+    )
   } else {
     const poValue = po.parse(readFileSync(input, { encoding: "utf-8" }))
     writeFileSync(output, po_to_wei18n(poValue))
