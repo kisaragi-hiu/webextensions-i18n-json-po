@@ -112,10 +112,10 @@ function po_to_wei18n(poValue: GettextParserData) {
   return JSON.stringify(res, null, 2) + "\n"
 }
 
-const helpText = `./index.ts
+const helpText = `wei18n-po-conv
 
 Usage:
-  ./index.ts -l locale -i <input file> -o <output file>:
+  wei18n-po-conv -l locale -i <input file> -o <output file>:
     Convert input file to output file.
     If input file name ends in .json, convert it from WebExtensions JSON to
       Gettext PO and write the resulting PO to output file.
