@@ -31,12 +31,13 @@ const wei18n = z.record(
     message: z.string(),
     description: z.optional(z.string()),
     placeholders: z.optional(
-      z.object({
-        url: z.object({
+      z.record(
+        z.string(),
+        z.object({
           content: z.string(),
           example: z.optional(z.string()),
         }),
-      }),
+      ),
     ),
   }),
 )
@@ -85,14 +86,17 @@ function wei18n_to_po(json: Wei18n, locale: string) {
     translations: { "": translations },
   }
   for (const [key, entry] of Object.entries(json)) {
-    translations[key] = {
+    const resultEntry: GettextParserDataEntry = {
       msgctxt: "",
       msgid: key,
       msgstr: [entry.message],
-      comments: {
-        translator: "",
-      },
     }
+    if (entry.description) {
+      resultEntry.comments = {
+        translator: entry.description,
+      }
+    }
+    translations[key] = resultEntry
   }
   return po.compile(res)
 }
