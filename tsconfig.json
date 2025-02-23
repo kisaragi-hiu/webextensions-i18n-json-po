@@ -14,7 +14,6 @@
 
     "strict": true,
     "noFallthroughCasesInSwitch": true,
-    "exactOptionalPropertyTypes": true,
 
     "declaration": true
   }

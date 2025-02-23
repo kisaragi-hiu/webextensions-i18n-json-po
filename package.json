@@ -13,14 +13,21 @@
     "type": "buymeacoffee",
     "url": "https://www.buymeacoffee.com/kisaragihiu"
   },
-  "scripts": { "run": "bun ./dist/index.js" },
+  "scripts": {
+    "run": "bun ./dist/index.js"
+  },
   "author": "Kisaragi Hiu <mail@kisaragi-hiu.com>",
   "license": "MIT",
   "files": ["dist/index.js"],
   "devDependencies": {
     "@biomejs/biome": "1.8.2",
     "@types/bun": "^1.2.3",
+    "@types/gettext-parser": "^8.0.0",
     "@types/node": "^20.17.19"
   },
-  "trustedDependencies": ["@biomejs/biome"]
+  "trustedDependencies": ["@biomejs/biome"],
+  "dependencies": {
+    "gettext-parser": "^8.0.0",
+    "zod": "^3.24.2"
+  }
 }

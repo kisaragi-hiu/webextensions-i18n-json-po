@@ -4,6 +4,8 @@ Converting between the [WebExtensions API messages.json format](https://develope
 
 May not be perfect, relies on you checking the diff afterwards.
 
+This is mainly for being able to translate WebExtensions with KDE's Lokalize.
+
 Publish:
 
 - unprivate
@@ -18,3 +20,5 @@ Publish:
   ```
 
   into package.json
+
+i18next-gettext-converter also works, but it doesn't handle the message descriptions.
