@@ -103,6 +103,7 @@ function wei18n_to_po(json: Wei18n, locale: string) {
 function po_to_wei18n(poValue: GettextParserData) {
   const res: Wei18n = {}
   for (const [msgid, entry] of Object.entries(poValue.translations[""])) {
+    if (msgid === "") continue
     res[msgid] = {
       message: entry.msgstr.join(""),
       description: entry.comments?.translator,
