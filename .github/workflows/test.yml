@@ -1,0 +1,24 @@
+name: test
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - name: Packages
+        run: |
+          bun install
+      - name: Lint
+        run: |
+          make lint
+      - name: Test
+        run: |
+          make test-cov
+      - name: Coveralls
+        uses: coverallsapp/github-action@v2

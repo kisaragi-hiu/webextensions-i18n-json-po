@@ -1,0 +1,51 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.6.3/schema.json",
+  "organizeImports": {
+    "enabled": true
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "complexity": { "noMultipleSpacesInRegularExpressionLiterals": "off" },
+      "style": {
+        "useTemplate": "off",
+        "noNonNullAssertion": "off",
+        "noUnusedTemplateLiteral": "off",
+        "noUselessElse": "off",
+        "useNamingConvention": {
+          "level": "warn",
+          "options": {
+            "conventions": [
+              {
+                "selector": { "kind": "objectLiteralProperty" },
+                "formats": [
+                  "PascalCase",
+                  "CONSTANT_CASE",
+                  "camelCase",
+                  "snake_case"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "suspicious": { "noExplicitAny": "off", "noImplicitAnyLet": "off" }
+    }
+  },
+  "formatter": {
+    "indentStyle": "space",
+    "enabled": true
+  },
+  "json": {
+    "formatter": {
+      "indentStyle": "space",
+      "enabled": true
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "semicolons": "asNeeded"
+    }
+  }
+}
