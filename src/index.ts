@@ -109,7 +109,7 @@ function po_to_wei18n(poValue: GettextParserData) {
       description: entry.comments?.translator,
     }
   }
-  return JSON.stringify(res, null, 2)
+  return JSON.stringify(res, null, 2) + "\n"
 }
 
 const helpText = `./index.ts
