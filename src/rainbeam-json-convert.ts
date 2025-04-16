@@ -102,32 +102,30 @@ function toJson(poValue: GettextParserData) {
   return JSON.stringify(res, null, 2) + "\n"
 }
 
-const helpText = `wei18n-po-conv
+const helpText = `rainbeam-json-convert.ts
 
 Usage:
-  wei18n-po-conv -l locale -i <input file> -o <output file>:
+  rainbeam-json-convert.ts -l locale -i <input file> -o <output file>:
     Convert input file to output file.
-    If input file name ends in .json, convert it from WebExtensions JSON to
+    If input file name ends in .json, convert it from Rainbeam's JSON to
       Gettext PO and write the resulting PO to output file.
+      Use -s to specify source text.
     Otherwise, try to convert it from PO to JSON.
-
-  When converting from JSON to PO, positional arguments are all used to specify
-  reference files, like for source text.
 
 Options:
   --help: show help (this message)`
 
 async function main() {
   const parsedArgs = parseArgs({
-    allowPositionals: true,
     options: {
       locale: { type: "string", short: "l" },
       input: { type: "string", short: "i" },
+      source: { type: "string", short: "s" },
       output: { type: "string", short: "o" },
       help: { type: "boolean" },
     },
   })
-  const { help, input, output, locale } = parsedArgs.values
+  const { help, input, output, locale, source } = parsedArgs.values
   if (help) {
     console.log(helpText)
     process.exit(0)
@@ -140,7 +138,6 @@ async function main() {
     const dataValue = data.parse(
       JSON.parse(readFileSync(input, { encoding: "utf-8" })),
     )
-    const source = parsedArgs.positionals[0]
     const sourceValue = source
       ? data.parse(JSON.parse(readFileSync(source, { encoding: "utf-8" })))
       : undefined
