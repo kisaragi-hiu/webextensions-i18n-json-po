@@ -77,7 +77,8 @@ function toPo(json: Data, locale: string, source?: Data) {
     },
     translations: { "": translations },
   }
-  for (const [key, text] of Object.entries(json.data)) {
+  // prioritize source, in case source has more entries.
+  for (const [key, text] of Object.entries((source ?? json).data)) {
     const resultEntry: GettextParserDataEntry = {
       msgctxt: key,
       msgid: source ? source.data[key] : text,
