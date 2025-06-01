@@ -181,17 +181,17 @@ Options:
 
 Examples:
   Prepare a partially translated Rainbeam JSON file for translation:
-    wei18n-po-conv \
-    --mode rainbeam \
-    -i ~/git/rainbeam/langs/zh-TW.json \
-    -s ~/git/rainbeam/langs/en-US.json \
-    -o /tmp/zh-tw.po \
+    wei18n-po-conv \\
+    --mode rainbeam \\
+    -i ~/git/rainbeam/langs/zh-TW.json \\
+    -s ~/git/rainbeam/langs/en-US.json \\
+    -o /tmp/zh-tw.po \\
     -l zh_TW
 
   Convert a translated PO file into Rainbeam JSON:
-    wei18n-po-conv \
-    --mode rainbeam \
-    -i /tmp/zh-tw.po \
+    wei18n-po-conv \\
+    --mode rainbeam \\
+    -i /tmp/zh-tw.po \\
     -o ~/git/rainbeam/langs/zh-TW.json
 `
 
