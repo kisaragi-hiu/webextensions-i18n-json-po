@@ -4,6 +4,7 @@ import { readFileSync, realpathSync, writeFileSync, writeSync } from "node:fs"
 import { parseArgs } from "node:util"
 import { po } from "gettext-parser"
 import { z } from "zod"
+import type { GettextParserData, GettextParserDataEntry } from "./gettext"
 
 // The default behavior on an uncaught exception is to print the source line
 // with the error, then print the backtrace or message. Since we ship minified
@@ -41,32 +42,6 @@ const wei18n = z.record(
     ),
   }),
 )
-const gettextParserDataEntry = z.object({
-  msgctxt: z.optional(z.string()),
-  msgid: z.string(),
-  msgid_plural: z.optional(z.string()),
-  msgstr: z.array(z.string()),
-  comments: z.optional(
-    z.object({
-      translator: z.optional(z.string()),
-      reference: z.optional(z.string()),
-      extracted: z.optional(z.string()),
-      flag: z.optional(z.string()),
-      previous: z.optional(z.string()),
-    }),
-  ),
-  obsolete: z.optional(z.boolean()),
-})
-const gettextParserData = z.object({
-  charset: z.string(),
-  headers: z.record(z.string(), z.string()),
-  translations: z.record(
-    z.string(),
-    z.record(z.string(), gettextParserDataEntry),
-  ),
-})
-type GettextParserData = z.infer<typeof gettextParserData>
-type GettextParserDataEntry = z.infer<typeof gettextParserDataEntry>
 type Wei18n = z.infer<typeof wei18n>
 
 /**

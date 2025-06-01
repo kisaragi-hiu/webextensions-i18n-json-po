@@ -4,6 +4,7 @@ import { readFileSync, realpathSync, writeFileSync, writeSync } from "node:fs"
 import { parseArgs } from "node:util"
 import { po } from "gettext-parser"
 import { z } from "zod"
+import type { GettextParserData, GettextParserDataEntry } from "./gettext"
 
 // The default behavior on an uncaught exception is to print the source line
 // with the error, then print the backtrace or message. Since we ship minified
@@ -22,48 +23,25 @@ if (process.env.NODE_ENV === "production") {
 }
 
 /**
- * WebExtensions i18n messages.json content.
- * https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/i18n/Locale-Specific_Message_reference
+ * Rainbeam translation json object.
  */
-const data = z.object({
+const rainbeamI18nData = z.object({
   name: z.string(),
   version: z.string(),
   data: z.record(z.string()),
 })
-const gettextParserDataEntry = z.object({
-  msgctxt: z.optional(z.string()),
-  msgid: z.string(),
-  msgid_plural: z.optional(z.string()),
-  msgstr: z.array(z.string()),
-  comments: z.optional(
-    z.object({
-      translator: z.optional(z.string()),
-      reference: z.optional(z.string()),
-      extracted: z.optional(z.string()),
-      flag: z.optional(z.string()),
-      previous: z.optional(z.string()),
-    }),
-  ),
-  obsolete: z.optional(z.boolean()),
-})
-const gettextParserData = z.object({
-  charset: z.string(),
-  headers: z.record(z.string(), z.string()),
-  translations: z.record(
-    z.string(),
-    z.record(z.string(), gettextParserDataEntry),
-  ),
-})
-type Data = z.infer<typeof data>
-type GettextParserData = z.infer<typeof gettextParserData>
-type GettextParserDataEntry = z.infer<typeof gettextParserDataEntry>
+type RainbeamI18nData = z.infer<typeof rainbeamI18nData>
 
 /**
  * Take parsed `json` and return raw PO data.
  * If `source` is given, then `json` is the target text. Otherwise `json` is the
  * source text.
  */
-function toPo(json: Data, locale: string, source?: Data) {
+function toPo(
+  json: RainbeamI18nData,
+  locale: string,
+  source?: RainbeamI18nData,
+) {
   const translations: Record<string, GettextParserDataEntry> = {}
   const res: GettextParserData = {
     charset: "utf-8",
@@ -90,7 +68,7 @@ function toPo(json: Data, locale: string, source?: Data) {
   return po.compile(res)
 }
 function toJson(poValue: GettextParserData) {
-  const res: Data = {
+  const res: RainbeamI18nData = {
     name: "out",
     version: "0.0.0",
     data: {},
@@ -151,11 +129,13 @@ async function main() {
     process.exit(1)
   }
   if (input.endsWith(".json")) {
-    const dataValue = data.parse(
+    const dataValue = rainbeamI18nData.parse(
       JSON.parse(readFileSync(input, { encoding: "utf-8" })),
     )
     const sourceValue = source
-      ? data.parse(JSON.parse(readFileSync(source, { encoding: "utf-8" })))
+      ? rainbeamI18nData.parse(
+          JSON.parse(readFileSync(source, { encoding: "utf-8" })),
+        )
       : undefined
     writeFileSync(output, toPo(dataValue, locale, sourceValue))
   } else {
