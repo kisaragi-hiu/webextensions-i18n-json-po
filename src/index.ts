@@ -58,7 +58,7 @@ type Wei18n = z.infer<typeof wei18n>
  * If `source` is given, then `json` is the target text. Otherwise `json` is the
  * source text.
  */
-function rainbeamToPo(
+export function rainbeamToPo(
   json: RainbeamI18nData,
   locale: string,
   source?: RainbeamI18nData,
@@ -106,7 +106,11 @@ function rainbeamToJson(poValue: GettextParserData) {
  * Take parsed `json` and output the raw PO data.
  * If `referenceTexts` is given, also write that to the PO file for reference.
  */
-function wei18nToPo(json: Wei18n, locale: string, referenceTexts?: Wei18n[]) {
+export function wei18nToPo(
+  json: Wei18n,
+  locale: string,
+  referenceTexts?: Wei18n[],
+) {
   const translations: Record<string, GettextParserDataEntry> = {}
   const res: GettextParserData = {
     charset: "utf-8",
