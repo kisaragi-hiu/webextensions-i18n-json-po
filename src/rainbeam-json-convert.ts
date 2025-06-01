@@ -82,7 +82,8 @@ function toPo(json: Data, locale: string, source?: Data) {
     const resultEntry: GettextParserDataEntry = {
       msgctxt: key,
       msgid: source ? source.data[key] : text,
-      msgstr: source ? [text] : [],
+      // If source is given, json is the target text, fill it in
+      msgstr: source ? [json.data[key]] : [],
     }
     translations[key] = resultEntry
   }
