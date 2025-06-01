@@ -115,7 +115,21 @@ Usage:
     Otherwise, try to convert it from PO to JSON.
 
 Options:
-  --help: show help (this message)`
+  --help: show help (this message)
+
+Examples:
+  Prepare a partially translated JSON file for translation:
+    bun src/rainbeam-json-convert.ts \
+    -i ~/git/rainbeam/langs/zh-TW.json \
+    -s ~/git/rainbeam/langs/en-US.json \
+    -o /tmp/zh-tw.po \
+    -l zh_TW
+
+  Convert a translated PO file into JSON:
+    bun src/rainbeam-json-convert.ts \
+    -i /tmp/zh-tw.po \
+    -o ~/git/rainbeam/langs/zh-TW.json
+`
 
 async function main() {
   const parsedArgs = parseArgs({
