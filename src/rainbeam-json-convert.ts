@@ -37,7 +37,7 @@ type RainbeamI18nData = z.infer<typeof rainbeamI18nData>
  * If `source` is given, then `json` is the target text. Otherwise `json` is the
  * source text.
  */
-function toPo(
+function rainbeamToPo(
   json: RainbeamI18nData,
   locale: string,
   source?: RainbeamI18nData,
@@ -67,7 +67,7 @@ function toPo(
   }
   return po.compile(res)
 }
-function toJson(poValue: GettextParserData) {
+function rainbeamToJson(poValue: GettextParserData) {
   const res: RainbeamI18nData = {
     name: "out",
     version: "0.0.0",
@@ -137,10 +137,10 @@ async function main() {
           JSON.parse(readFileSync(source, { encoding: "utf-8" })),
         )
       : undefined
-    writeFileSync(output, toPo(dataValue, locale, sourceValue))
+    writeFileSync(output, rainbeamToPo(dataValue, locale, sourceValue))
   } else {
     const poValue = po.parse(readFileSync(input, { encoding: "utf-8" }))
-    writeFileSync(output, toJson(poValue))
+    writeFileSync(output, rainbeamToJson(poValue))
   }
 }
 

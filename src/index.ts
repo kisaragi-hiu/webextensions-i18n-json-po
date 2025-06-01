@@ -48,7 +48,7 @@ type Wei18n = z.infer<typeof wei18n>
  * Take parsed `json` and output the raw PO data.
  * If `referenceTexts` is given, also write that to the PO file for reference.
  */
-function wei18n_to_po(json: Wei18n, locale: string, referenceTexts?: Wei18n[]) {
+function wei18nToPo(json: Wei18n, locale: string, referenceTexts?: Wei18n[]) {
   const translations: Record<string, GettextParserDataEntry> = {}
   const res: GettextParserData = {
     charset: "utf-8",
@@ -94,7 +94,7 @@ ${reference[key].message}`
   }
   return po.compile(res)
 }
-function po_to_wei18n(poValue: GettextParserData) {
+function wei18nToJson(poValue: GettextParserData) {
   const res: Wei18n = {}
   for (const [msgid, entry] of Object.entries(poValue.translations[""])) {
     if (msgid === "") continue
@@ -147,7 +147,7 @@ async function main() {
     const references = parsedArgs.positionals
     writeFileSync(
       output,
-      wei18n_to_po(
+      wei18nToPo(
         wei18nValue,
         locale,
         references.map((file) =>
@@ -157,7 +157,7 @@ async function main() {
     )
   } else {
     const poValue = po.parse(readFileSync(input, { encoding: "utf-8" }))
-    writeFileSync(output, po_to_wei18n(poValue))
+    writeFileSync(output, wei18nToJson(poValue))
   }
 }
 
